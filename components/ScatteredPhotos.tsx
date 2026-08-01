@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 type Spot = {
   top?: string;
@@ -14,6 +15,7 @@ type Spot = {
   delay: number;
   hideOnMobile?: boolean;
   src?: string;
+  nearButton?: boolean;
 };
 
 const SPOTS: Spot[] = [
@@ -46,6 +48,7 @@ const SPOTS: Spot[] = [
     bg: ["#FFE6A8", "#FFD166"],
     delay: 0.8,
     src: "/photos/photo3.jpg",
+    nearButton: true,
   },
   {
     bottom: "2%",
@@ -56,6 +59,7 @@ const SPOTS: Spot[] = [
     bg: ["#B7EFD9", "#8BE8C4"],
     delay: 1.2,
     src: "/photos/photo4.jpg",
+    nearButton: true,
   },
   {
     top: "22%",
@@ -89,6 +93,7 @@ const SPOTS: Spot[] = [
     bg: ["#E0BBE4", "#C99BE0"],
     delay: 1.5,
     src: "/photos/photo5.jpg",
+    nearButton: true,
   },
   {
     bottom: "23%",
@@ -121,6 +126,7 @@ const SPOTS: Spot[] = [
     bg: ["#CDE7FF", "#A9D4FF"],
     delay: 1.0,
     src: "/photos/photo7.jpg",
+    nearButton: true,
   },
 ];
 
@@ -152,49 +158,80 @@ function PlaceholderPortrait({ from, to }: { from: string; to: string }) {
   );
 }
 
-export default function ScatteredPhotos() {
+export default function ScatteredPhotos({
+  dimNearButton = false,
+}: {
+  dimNearButton?: boolean;
+}) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      {SPOTS.map((s, i) => (
-        <motion.div
-          key={i}
-          className={`absolute ${s.hideOnMobile ? "hidden sm:block" : ""}`}
-          style={{
-            top: s.top,
-            bottom: s.bottom,
-            left: s.left,
-            right: s.right,
-            width: s.w,
-            height: s.h,
-          }}
-          initial={{ opacity: 0, rotate: s.rotate, y: 20 }}
-          animate={{
-            opacity: 0.9,
-            rotate: [s.rotate - 2, s.rotate + 2, s.rotate - 2],
-            y: [0, -10, 0],
-          }}
-          transition={{
-            opacity: { duration: 1, delay: s.delay },
-            rotate: { duration: 6 + i, repeat: Infinity, ease: "easeInOut", delay: s.delay },
-            y: { duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: s.delay },
-          }}
-        >
-          <div className="relative h-full w-full rounded-2xl border-[3px] border-white bg-white p-1.5 shadow-[0_16px_34px_rgba(43,27,51,0.22)]">
-            <div className="h-full w-full overflow-hidden rounded-xl">
-              {s.src ? (
-                <img src={s.src} alt="" className="h-full w-full object-cover" />
-              ) : (
-                <PlaceholderPortrait from={s.bg[0]} to={s.bg[1]} />
-              )}
-            </div>
-          {!s.src && (
-            <span className="absolute bottom-2 right-2 rounded-full bg-white/90 px-1.5 py-0.5 text-[9px] font-semibold text-ink/60 shadow-sm">
-              📸 remplace-moi
-            </span>
-          )}
-          </div>
-        </motion.div>
-      ))}
+      {SPOTS.map((s, i) => {
+        const hidden = !!(s.nearButton && dimNearButton && isMobile);
+        return (
+          // Niveau 1 : gère l'apparition / disparition (fondu + glissement),
+          // exactement comme l'entrée initiale au chargement de la page.
+          <motion.div
+            key={i}
+            className={`absolute ${s.hideOnMobile ? "hidden sm:block" : ""}`}
+            style={{
+              top: s.top,
+              bottom: s.bottom,
+              left: s.left,
+              right: s.right,
+              width: s.w,
+              height: s.h,
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: hidden ? 0 : 0.9,
+              y: hidden ? 20 : 0,
+            }}
+            transition={{
+              duration: 0.6,
+              ease: "easeInOut",
+              delay: hidden ? 0 : s.delay,
+            }}
+          >
+            {/* Niveau 2 : le flottement continu, indépendant du fondu ci-dessus */}
+            <motion.div
+              className="h-full w-full"
+              animate={{
+                rotate: [s.rotate - 2, s.rotate + 2, s.rotate - 2],
+                y: [0, -10, 0],
+              }}
+              transition={{
+                rotate: { duration: 6 + i, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: 5 + i, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              <div className="relative h-full w-full rounded-2xl border-[3px] border-white bg-white p-1.5 shadow-[0_16px_34px_rgba(43,27,51,0.22)]">
+                <div className="h-full w-full overflow-hidden rounded-xl">
+                  {s.src ? (
+                    <img src={s.src} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <PlaceholderPortrait from={s.bg[0]} to={s.bg[1]} />
+                  )}
+                </div>
+                {!s.src && (
+                  <span className="absolute bottom-2 right-2 rounded-full bg-white/90 px-1.5 py-0.5 text-[9px] font-semibold text-ink/60 shadow-sm">
+                    📸 remplace-moi
+                  </span>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        );
+      })}
     </div>
   );
 }

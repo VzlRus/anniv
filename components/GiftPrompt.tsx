@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import CakeCharacter from "@/components/CakeCharacter";
 
-const MAX_STEP = 5;
+const MAX_STEP = 2;
 
-export default function GiftPrompt() {
+export default function GiftPrompt({ onReveal }: { onReveal?: () => void }) {
   const [step, setStep] = useState(0);
   const [outcome, setOutcome] = useState<"none" | "oui" | "non">("none");
 
@@ -19,10 +19,12 @@ export default function GiftPrompt() {
       return;
     }
     setOutcome("oui");
+    onReveal?.();
   }
 
   function clickNon() {
     setOutcome("non");
+    onReveal?.();
   }
 
   if (outcome !== "none") {

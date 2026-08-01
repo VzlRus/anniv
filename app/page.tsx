@@ -16,12 +16,13 @@ const NEWS = "BREAKING NEWS";
 
 export default function Home() {
   const [surprised, setSurprised] = useState(false);
+  const [giftRevealed, setGiftRevealed] = useState(false);
 
   return (
     <main className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-x-hidden bg-cream px-4 py-12 pb-[calc(3rem+env(safe-area-inset-bottom))] text-ink sm:px-6 sm:py-16">
       <Balloons />
       <AmbientConfetti />
-      <ScatteredPhotos />
+      <ScatteredPhotos dimNearButton={surprised && !giftRevealed} />
 
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-lilac/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-sun/30 blur-3xl" />
@@ -70,11 +71,11 @@ export default function Home() {
         🚨
         <span className="mt-2 block font-medium text-gray-900">
           Une légende est née aujourd'hui ! <br />
-          Après plusieurs années d'existence, les scientifiques🔬🧪 confirment 
-          officiellement que ta beauté 😍✨ et tes "zyeux bridé chine"😂 reste un mystère impossible à expliquer 🤯💖,
+          Après plusieurs années d'existence, les scientifiques🔬 confirment 
+          officiellement que ta beauté 😍✨et tes "zyeux bridé chine"😂 reste un mystère impossible à expliquer 🤯💖,
           et je remercie la vie🙏❤️ de t'avoir mise sur mon chemin🌹💫.
           Je te souhaite une journée remplie de bonheur😊✨, de rires🤣, d'amour🥰, de cadeaux🎁,
-          et surtout beaucoup d'argent💰💵🤑💸 beaucoup hin, pour t'offrir tout ce dont tu rêves. <br />Joyeux anniversaire chouchou ! 💖✨
+          et surtout beaucoup d'argent💰💵🤑💸beaucoup hin,beaucoup, pour t'offrir tout ce dont tu rêves. <br />Joyeux anniversaire chouchou ! 💖✨
         </span> 
 
       </p>
@@ -127,10 +128,10 @@ export default function Home() {
         animate={surprised ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
         transition={{ duration: 0.5 }}
       >
-        J't&apos;m b1 m'humain préférer 💖
+        J't&apos;m bien mon humain préférer 💖
       </motion.p>
 
-      {surprised && <GiftPrompt />}
+      {surprised && <GiftPrompt onReveal={() => setGiftRevealed(true)} />}
 
       <footer className="relative z-10 mt-16 flex max-w-xs flex-wrap items-center justify-center gap-1.5 text-center text-[11px] leading-relaxed text-ink/35 sm:max-w-md">
         <span>fait avec</span>
