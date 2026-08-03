@@ -122,14 +122,20 @@ export default function Home() {
         />
       </div>
 
-      <motion.p
-        className="relative z-10 mt-6 text-center font-display text-2xl text-bubblegum sm:text-3xl"
-        initial={{ opacity: 0, y: 10 }}
-        animate={surprised ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={{ duration: 0.5 }}
-      >
-        J't&apos;m bien mon humain préférer 💖
-      </motion.p>
+      <motion.div
+  className="relative z-10 mt-6 max-w-xs rounded-3xl border border-white/60 bg-white/70 px-6 py-4 text-center shadow-[0_10px_30px_rgba(232,180,200,0.35)] backdrop-blur-sm sm:max-w-sm"
+  initial={{ opacity: 0, scale: 0.85, y: 10 }}
+  animate={
+    surprised
+      ? { opacity: 1, scale: 1, y: 0 }
+      : { opacity: 0, scale: 0.85, y: 10 }
+  }
+  transition={{ duration: 0.5, ease: "backOut" }}
+>
+  <p className="font-display text-xl text-bubblegum sm:text-2xl">
+    J&apos;t&apos;m b1 m&apos;humain préférer 💖
+  </p>
+</motion.div>
 
       {surprised && <GiftPrompt onReveal={() => setGiftRevealed(true)} />}
 
