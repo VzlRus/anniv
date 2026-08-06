@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import CakeCharacter from "@/components/CakeCharacter";
 
-const MAX_STEP = 2;
+const MAX_STEP = 3;
 
 export default function GiftPrompt({ onReveal }: { onReveal?: () => void }) {
   const [step, setStep] = useState(0);
@@ -38,7 +38,7 @@ export default function GiftPrompt({ onReveal }: { onReveal?: () => void }) {
         <p className="font-display text-xl leading-snug text-bubblegum sm:text-2xl">
           {outcome === "non"
             ? "Fait moi signe pour avoir ton cadeau quand même 😏💗"
-            : "Fait moi signe pour avoir ton cadeau"}
+            : "Ta cliquer dh🤣 Fait moi signe pour avoir ton cadeau"}
         </p>
 
         <div className="relative flex w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-white bg-white/40 py-6 shadow-md">

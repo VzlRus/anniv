@@ -133,7 +133,7 @@ export default function Home() {
   transition={{ duration: 0.5, ease: "backOut" }}
 >
   <p className="font-display text-xl text-bubblegum sm:text-2xl">
-    J&apos;t&apos;m b1 m&apos;humain préférer 💖
+    Je t&apos;m b1 mon humain préférer 💖
   </p>
 </motion.div>
 
